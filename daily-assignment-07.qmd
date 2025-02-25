@@ -1,5 +1,0 @@
----
-title: "daily-assignment-07"
-author: "Zachary Cramton"
-format: html
----
