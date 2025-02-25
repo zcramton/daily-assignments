@@ -8,9 +8,9 @@
 # Prepare packages
 library(dplyr)
 library(tidyr)
-library(tidyverse)
 library(ggplot2)
 library(datasets)
+library(scales)
 
 #Read in and story NY-Times Data
 covid <- read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv")
@@ -30,8 +30,8 @@ covid_joined <- inner_join(df,covid, by = "state")
 covid_summary <- covid_joined %>% 
   group_by(region, date) %>% #Split by region and date
   summarize(
-    Cases = sum(cases, na.rm = TRUE), #Apply sum function
-    Deaths = sum(deaths, na.rm = TRUE)
+    Cases = sum(cases/1000, na.rm = TRUE), #Apply sum function
+    Deaths = sum(deaths/1000, na.rm = TRUE)
   )
   
 # Pivot data from to long format
@@ -44,14 +44,17 @@ covid_long <- covid_summary %>%
 us_regional_covid_trends = ggplot(covid_long, aes(x = date, y = count, color = region)) +
   geom_line() +
   facet_grid(metric~region, scales = "free_y",) +
-  labs(title = "COVID-19 Trends by Region",
+  labs(title = "COVID-19 Cases and Deaths by Region",
+       subtitle = "Since 2020 (per 1,000 people)",
        caption = "Based on NY-Times COVID-19 Data.",
        x = "Date",
-       y = "Cumulative Count",
+       y = "Cumulative Cases",
        color = "Regions") +
   theme_bw() + 
-  theme(legend.position = "none") + 
-  scale_x_date(date_breaks = "8 month", date_labels = "%b %y")
+  theme(legend.position = "none",
+        axis.text.y = element_text(angle = 45, hjust = 1)) + 
+  scale_x_date(date_breaks = "8 month", date_labels = "%b %y") +
+  scale_y_continuous(labels = label_number())
   
 # Save plot as an image
 ggsave(us_regional_covid_trends,
