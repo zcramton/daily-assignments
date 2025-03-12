@@ -1,5 +1,6 @@
 project:
-  title: "daily-assignments"
-
+  title: "ESS 330 - Daily Assignments"
 editor: visual
-
+format:
+  html:
+    self-contained: true
