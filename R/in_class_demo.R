@@ -142,8 +142,8 @@ dials$object
 my.grid <- dials %>% 
   grid_latin_hypercube(size = 20)
 
-library (ploty)
-ploty::plot_ly(my.grid,
+library (plotly)
+plotly::plot_ly(my.grid,
                x = ~trees,
                y = ~min_n,
                z = ~tree_depth)
